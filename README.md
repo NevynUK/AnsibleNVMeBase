@@ -1,1 +1,21 @@
-Ansible NVME Base
+# Adding NVMe Drive to Raspberry Pi
+
+This repository contains the scripts necessary to add and NVMe drive to a Raspberry Pi using Ansible.
+
+These scripts are part of a series about automating the setup and configuration of a Raspberry Pi for use in a testing environment.  A full discussion of these scripts can be found in [Part 3](https://blog.mark-stevens.co.uk/2024/07/repeatable-deployments-3-adding-nvme-drive-automatically/) of the series.
+
+## Assumptions
+
+By default the system assumes the following:
+
+* The Raspberry Pi name will be _testserver500_ and is accessible on the local next work as _testserver500.local_
+* The Raspberry Pi already has an operating system installed
+* User name is _clusteruser_
+* Password for the user is stored in the environment variable _CLUSTER_PASSWORD_
+
+## Instructions
+
+* Edit the _inventory.yml_ file if you wish to change any of the default names.
+* Updated the operating system with the command _ansible-playbook -i inventory.yml UpdateAndRebootRaspberryPi.yml_
+* Install the NVMe drive with the command _ansible-playbook -i inventory.yml ConfigureNVMeBase.yml_
+
