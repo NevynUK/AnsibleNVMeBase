@@ -1,0 +1,51 @@
+---
+- name: Configure Raspberry Pi 5 to use the drive attached to the NVMe Base.
+  hosts: raspberrypi
+  become: true
+  tasks:
+    - name: Ensure pciex1_gen3 is enabled in /boot/firmware/config.txt
+      blockinfile:
+        path: /boot/firmware/config.txt
+        marker: "# {mark} ANSIBLE MANAGED BLOCK"
+        block: |
+          dtparam=pciex1_gen=3
+        insertafter: '^\[all\]$'
+        create: yes
+
+    - name: Format the NVMe drive nvme0n1
+      command: mkfs.ext4 /dev/nvme0n1 -L Data
+
+    - name: Make the mount point for the NVMe drive
+      command: mkdir /mnt/nvme0
+
+    - name: Mount the newly formatted drive
+      command: mount /dev/nvme0n1 /mnt/nvme0
+
+    - name: Make sure that the user can read and write to the mount point
+      command: chown -R {{ ansible_user }}:{{ ansible_user }} /mnt/nvme0
+
+    - name: Get the UUID of the device
+      command: blkid /dev/nvme0n1
+      register: blkid_output
+
+    - name: Extract UUID from blkid output
+      set_fact:
+        device_uuid: "{{ blkid_output.stdout | regex_search('UUID=\"([^\"]+)\"', '\\1') }}"
+
+    - name: Clean the extracted UUID
+      set_fact:
+        clean_uuid: "{{ device_uuid | regex_replace('\\[', '') | regex_replace(']', '') |  regex_replace(\"'\" '') }}"
+
+    - name: Add UUID entry to /etc/fstab
+      lineinfile:
+        path: /etc/fstab
+        line: "UUID={{ clean_uuid }} /mnt/nvme0 ext4 defaults,auto,users,rw,nofail,noatime 0 0"
+        state: present
+        create: yes
+
+    - name: Reboot the Raspberry Pi
+      reboot:
+        msg: "Immediate reboot initiated by Ansible"
+        reboot_timeout: 600
+        pre_reboot_delay: 0
+        post_reboot_delay: 0
