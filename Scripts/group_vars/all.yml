@@ -1,0 +1,3 @@
+---
+default_user: clusteruser
+nvmebase_mount_point: nvme0
