@@ -1,0 +1,26 @@
+---
+- name: Samba
+  hosts: raspberrypi
+
+  tasks:
+  - name: Install Samba
+    become: yes
+    apt:
+      pkg:
+        - samba
+        - samba-common-bin
+        - cifs-utils 
+      state: present
+      update_cache: true
+  
+  - name: Set up Samba configuration
+    become: yes
+    blockinfile:
+      path: /etc/samba/smb.conf
+      block: |
+        [share]
+            path = /mnt/{{ nvmebase_mount_point }}
+            read only = no
+            public = yes
+            writable = yes
+            force user={{ default_user }}
