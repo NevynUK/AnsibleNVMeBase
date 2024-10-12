@@ -14,7 +14,7 @@
 
     - name: Format the NVMe drive nvme0n1
       command: mkfs.ext4 /dev/nvme0n1 -L Data
-      when: format_nvmebase
+      when: format_nvmebase | bool
 
     - name: Make the mount point for the NVMe drive
       command: mkdir /mnt/{{ nvmebase_mount_point }}
