@@ -13,9 +13,14 @@ By default the system assumes the following:
 * User name is _clusteruser_
 * Password for the user is stored in the environment variable _CLUSTER_PASSWORD_
 
+## Ansible Variables
+
+A number of configuration variables have been used to control the behaviour of these scripts.  A description of these variables can be found in the [group_vars/readme](Scripts/group_vars/readme.md) file.
+
 ## Instructions
 
-* Edit the _inventory.yml_ file if you wish to change any of the default names.
-* Updated the operating system with the command _ansible-playbook -i inventory.yml UpdateAndRebootRaspberryPi.yml_
-* Install the NVMe drive with the command _ansible-playbook -i inventory.yml ConfigureNVMeBase.yml_
+* Edit the hosts.ini_ file if you wish to change any of the default names.
+* Updated the operating system with the command _ansible-playbook UpdateAndRebootRaspberryPi.yml_
+* Install the NVMe drive with the command _ansible-playbook ConfigureNVMeBase.yml_
+* Install Samba with the command _ansible-playbook InstallSamba.yml_
 
