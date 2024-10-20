@@ -3,6 +3,10 @@
   hosts: raspberrypi
   become: true
   tasks:
+    #
+    # Enable PCIe gen3 for the NVMe drive on a Pimoroni NVMe Base.  We do not do this
+    # on the NVMEBse Duo as it is not supported.
+    #
     - name: Ensure pciex1_gen3 is enabled in /boot/firmware/config.txt
       blockinfile:
         path: /boot/firmware/config.txt
@@ -11,39 +15,27 @@
           dtparam=pciex1_gen=3
         insertafter: '^\[all\]$'
         create: yes
+      when: not nvme_duo
 
-    - name: Format the NVMe drive nvme0n1
-      command: mkfs.ext4 /dev/nvme0n1 -L Data
-      when: format_nvmebase | bool
+    #
+    # Configure the drive on the NVMeBase and the first drive on the NVMeBase Duo.
+    #
+    - include_tasks: ConfigureNVMeDriveTasks.yml
+      vars:
+          nvmebase_device_name: nvme0n1
 
-    - name: Make the mount point for the NVMe drive
-      command: mkdir /mnt/{{ nvmebase_mount_point }}
+    #
+    # Configure the second drive on the NVMeBase Duo.
+    #
+    - include_tasks: ConfigureNVMeDriveTasks.yml
+      vars:
+          nvmebase_device_name: nvme1n1
+      when: nvme_duo == true
 
-    - name: Mount the newly formatted drive
-      command: mount /dev/nvme0n1 /mnt/{{ nvmebase_mount_point }}
-
-    - name: Make sure that the user can read and write to the mount point
-      command: chown -R {{ ansible_user }}:{{ ansible_user }} /mnt/{{ nvmebase_mount_point }}
-
-    - name: Get the UUID of the device
-      command: blkid /dev/nvme0n1
-      register: blkid_output
-
-    - name: Extract UUID from blkid output
-      set_fact:
-        device_uuid: "{{ blkid_output.stdout | regex_search('UUID=\"([^\"]+)\"', '\\1') }}"
-
-    - name: Clean the extracted UUID
-      set_fact:
-        clean_uuid: "{{ device_uuid | regex_replace('\\[', '') | regex_replace(']', '') |  regex_replace(\"'\" '') }}"
-
-    - name: Add UUID entry to /etc/fstab
-      lineinfile:
-        path: /etc/fstab
-        line: "UUID={{ clean_uuid }} /mnt/{{ nvmebase_mount_point }} ext4 defaults,auto,users,rw,nofail,noatime 0 0"
-        state: present
-        create: yes
-
+    #
+    # Not strictly needed but it will allow us to check if the drive(s) have been mounted correctly
+    # and can be seen after a reboot.
+    #
     - name: Reboot the Raspberry Pi
       reboot:
         msg: "Immediate reboot initiated by Ansible"
