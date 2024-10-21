@@ -4,18 +4,23 @@
 
 ```yaml
 ---
-default_user: clusteruser
-nvmebase_mount_point: nvme0
-format_nvmebase: false
+ansible_user: clusteruser
+hostname: TestServer1000
+nvme_duo: false
+format_nvmebase: true
 ```
 
-## default_user: clusteruser
+## ansible_user: clusteruser
 
 Name of the default user for the device.  This is used as part of the Samba installation.
 
-## nvmebase_mount_point: nvme0
+## hostname: TestServer1000
 
-This is the name of the mount point for the NVMe drive.
+Host name for the Raspberry Pi.  This is used by the `ChangeHostname.yml` script.  Note that the reboot task will not reconnect to the Raspberry Pi correctly as the script will be assuming the old name for the host.
+
+## nvme_duo: false
+
+Set this to `true` if the scripts are bing run against against a NVMe Base Duo.  Doing this will configure the system to use both drives.
 
 ## format_nvmebase: false
 
