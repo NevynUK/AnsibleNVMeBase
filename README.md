@@ -10,6 +10,7 @@ A full discussion of these scripts can be found in the repeatable deployment ser
 * [Part 2 - NVMe Base](https://blog.mark-stevens.co.uk/2024/03/repeatable-deployments-part-1/)
 * [Part 3 - Adding NVMe Drive Automatically](https://blog.mark-stevens.co.uk/2024/07/repeatable-deployments-3-adding-nvme-drive-automatically/)
 * [Part 4 - Variables and Samba](https://blog.mark-stevens.co.uk/2024/10/repeatable-deployments-4-variables-and-samba/)
+* [Part 5 - NVMe Base Duo](https://blog.mark-stevens.co.uk/2024/10/repeatable-deployments-5-nvme-base-duo/)
 
 ## Assumptions
 
@@ -26,7 +27,8 @@ A number of configuration variables have been used to control the behaviour of t
 
 ## Instructions
 
-* Edit the hosts.ini_ file if you wish to change any of the default names.
+* Edit the _hosts.ini_ file if you wish to change any of the default names.
+* Edit _group_vars/all.yml_ making required changes to the variables.
 * Updated the operating system with the command _ansible-playbook UpdateAndRebootRaspberryPi.yml_
 * Install the NVMe drive with the command _ansible-playbook ConfigureNVMeBase.yml_
 * Install Samba with the command _ansible-playbook InstallSamba.yml_
