@@ -2,7 +2,14 @@
 
 This repository contains the scripts necessary to add and NVMe drive to a Raspberry Pi using Ansible.
 
-These scripts are part of a series about automating the setup and configuration of a Raspberry Pi for use in a testing environment.  A full discussion of these scripts can be found in [Part 3](https://blog.mark-stevens.co.uk/2024/07/repeatable-deployments-3-adding-nvme-drive-automatically/) of the series.
+These scripts are part of a series about automating the setup and configuration of a Raspberry Pi for use in a testing environment.
+
+A full discussion of these scripts can be found in the repeatable deployment series of posts:
+
+* [Part 1 - Initials Setup](https://blog.mark-stevens.co.uk/2024/03/repeatable-deployments-part-1/)
+* [Part 2 - NVMe Base](https://blog.mark-stevens.co.uk/2024/03/repeatable-deployments-part-1/)
+* [Part 3 - Adding NVMe Drive Automatically](https://blog.mark-stevens.co.uk/2024/07/repeatable-deployments-3-adding-nvme-drive-automatically/)
+* [Part 4 - Variables and Samba](https://blog.mark-stevens.co.uk/2024/10/repeatable-deployments-4-variables-and-samba/)
 
 ## Assumptions
 

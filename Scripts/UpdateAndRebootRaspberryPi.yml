@@ -3,6 +3,9 @@
   hosts: raspberrypi
   become: true
   tasks:
+    #
+    # Update the system software.
+    #
     - name: Update apt caches and the distribution
       apt:
         update_cache: yes
@@ -11,9 +14,15 @@
         autoclean: yes
         autoremove: yes
         
+    #
+    # Configure the system to use the latest boot ROM.
+    #
     - name: Update the EEPROM
       command: raspi-config nonint do_boot_rom E1 1
 
+    #
+    # Reboot to apply changes.
+    #
     - name: Reboot the Raspberry Pi
       reboot:
         msg: "Immediate reboot initiated by Ansible"
